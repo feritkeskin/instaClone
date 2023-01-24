@@ -1,4 +1,4 @@
-package com.feritkeskin.instaclone
+package com.feritkeskin.instaclone.view
 
 import android.app.Activity
 import android.content.Intent
@@ -14,6 +14,7 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.feritkeskin.instaclone.databinding.ActivityUploadBinding
+import com.feritkeskin.instaclone.util.MyPreferences
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -29,8 +30,7 @@ class UploadActivity : AppCompatActivity() {
     var selectedPicture: Uri? = null
     var pickedBitMap: Bitmap? = null
     private lateinit var auth: FirebaseAuth
-    private lateinit var db : FirebaseFirestore
-
+    private lateinit var db: FirebaseFirestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,18 +53,21 @@ class UploadActivity : AppCompatActivity() {
             if (selectedPicture != null) {
                 imagesReference.putFile(selectedPicture!!).addOnSuccessListener { taskSnapshot ->
 
-                    val uploadedPictureReference = storage.reference.child("images").child(imageName)
+                    val uploadedPictureReference =
+                        storage.reference.child("images").child(imageName)
                     uploadedPictureReference.downloadUrl.addOnSuccessListener { uri ->
                         val downloadUrl = uri.toString()
 
-                        val postMap = hashMapOf<String,Any>()
+                        val postMap = hashMapOf<String, Any>()
                         postMap["downloadUrl"] = downloadUrl
                         postMap["userEmail"] = auth.currentUser!!.email.toString()
+                        postMap["userName"] = MyPreferences(this).userName.toString()
                         postMap["comment"] = binding.uploadCommentText.text.toString()
                         postMap["date"] = Timestamp.now()
 
+                        println("2. Hello comment: ${postMap.get("comment")}")
 
-                        db.collection( "Posts").add(postMap).addOnCompleteListener{task ->
+                        db.collection("Posts").add(postMap).addOnCompleteListener { task ->
 
                             if (task.isComplete && task.isSuccessful) {
                                 finish()
@@ -72,17 +75,28 @@ class UploadActivity : AppCompatActivity() {
                         }
                     }
 
-                }.addOnFailureListener{exception ->
-                    Toast.makeText(applicationContext,exception.localizedMessage,Toast.LENGTH_LONG).show()
+                }.addOnFailureListener { exception ->
+                    Toast.makeText(
+                        applicationContext,
+                        exception.localizedMessage,
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
             }
         }
 
         binding.uploadImageView.setOnClickListener {
-            if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_EXTERNAL_STORAGE)
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    android.Manifest.permission.READ_EXTERNAL_STORAGE
+                )
                 != PackageManager.PERMISSION_GRANTED
             ) {
-                ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE), 1)
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE),
+                    1
+                )
             } else {
                 val galeriIntext =
                     Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)

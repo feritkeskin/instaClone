@@ -1,4 +1,4 @@
-package com.feritkeskin.instaclone
+package com.feritkeskin.instaclone.view
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -37,17 +37,18 @@ class LoginActivity : AppCompatActivity() {
             val password = binding.loginPassword.text.toString()
 
             if (userEmail.isNotEmpty() && password.isNotEmpty()) {
-                auth.signInWithEmailAndPassword(userEmail,password).addOnCompleteListener { task ->
+                auth.signInWithEmailAndPassword(userEmail, password).addOnCompleteListener { task ->
 
                     if (task.isSuccessful) {
-                        Toast.makeText(applicationContext,"Hoşgeldin: ${auth.currentUser?.email.toString()}",Toast.LENGTH_LONG).show()
+                        Toast.makeText(applicationContext, "Hoşgeldin: ${auth.currentUser?.email.toString()}",
+                            Toast.LENGTH_LONG).show()
                         val intent = Intent(applicationContext, FeedActivity::class.java)
                         startActivity(intent)
                         finish()
                     }
 
                 }.addOnFailureListener { exception ->
-                    Toast.makeText(applicationContext,exception.localizedMessage,Toast.LENGTH_LONG).show()
+                    Toast.makeText(applicationContext, exception.localizedMessage, Toast.LENGTH_LONG).show()
                 }
             }
         }

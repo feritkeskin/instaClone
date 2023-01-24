@@ -1,9 +1,10 @@
-package com.feritkeskin.instaclone
+package com.feritkeskin.instaclone.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDelegate
+import com.feritkeskin.instaclone.util.MyPreferences
 import com.feritkeskin.instaclone.databinding.ActivitySettingsBinding
 
 class SettingsActivity : AppCompatActivity() {

@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".UploadActivity">
+    tools:context=".view.UploadActivity">
 
     <ImageView
         android:id="@+id/uploadImageView"
@@ -28,7 +28,9 @@
         android:layout_marginEnd="20dp"
         android:background="@color/colorTextBackground"
         android:hint="Yorum Giriniz"
-        android:padding="12dp" />
+        android:padding="12dp"
+        android:textColor="@color/colorText"
+        android:textColorHint="@color/colorText" />
 
     <Button
         android:id="@+id/uploadShare"
